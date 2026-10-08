@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToonTeach World - Working Edition</title>
+  <style>
+    /* 1. Colorful Pastel Gradient Background */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Comic Sans MS', 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 40%, #a1c4fd 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow-y: auto;
+    }
+
+    /* 2. Floating Bubbles Effect */
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      animation: floatBubbles 7s infinite ease-in-out;
+      z-index: 1;
+    }
+
+    .b1 { width: 60px; height: 60px; top: 10%; left: 10%; animation-delay: 0s; background: rgba(255, 182, 193, 0.6); }
+    .b2 { width: 80px; height: 80px; top: 65%; left: 8%; animation-delay: 2s; background: rgba(173, 216, 230, 0.6); }
+    .b3 { width: 70px; height: 70px; top: 20%; right: 10%; animation-delay: 4s; background: rgba(255, 255, 224, 0.6); }
+    .b4 { width: 50px; height: 50px; top: 75%; right: 12%; animation-delay: 1s; background: rgba(221, 160, 221, 0.6); }
+    .b5 { width: 90px; height: 90px; top: 45%; left: 85%; animation-delay: 3s; background: rgba(152, 251, 152, 0.6); }
+
+    @keyframes floatBubbles {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-30px) scale(1.1); }
+    }
+
+    /* 3. Main Interface Card Container */
+    .container {
+      background: #ffffff;
+      border: 5px solid #ff4757;
+      border-radius: 25px;
+      padding: 30px;
+      width: 90%;
+      max-width: 550px;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+      z-index: 10;
+      margin: 20px;
+    }
+
+    h1 {
+      color: #ff4757;
+      font-size: 2.3rem;
+      margin-top: 0;
+      margin-bottom: 8px;
+      text-shadow: 2px 2px 0px #ffa502;
+    }
+
+    .subtitle {
+      color: #2ed573;
+      font-weight: bold;
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+
+    .input-box h3 {
+      color: #1e90ff;
+      margin-bottom: 10px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 90px;
+      border: 3px solid #ffa502;
+      border-radius: 15px;
+      padding: 12px;
+      font-size: 1rem;
+      outline: none;
+      box-sizing: border-box;
+      font-family: inherit;
+      resize: none;
+    }
+
+    /* Action Button */
+    button {
+      background: linear-gradient(45deg, #ff4757, #ffa502);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 1.15rem;
+      font-weight: bold;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(255, 71, 87, 0.4);
+      transition: transform 0.2s;
+      margin-top: 15px;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    /* Story Result Box */
+    .result-section {
+      margin-top: 22px;
+      padding: 18px;
+      border-radius: 20px;
+      background: #fff9e6;
+      border: 3px dashed #ff4757;
+      display: none;
+    }
+
+    .character-img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+    }
+
+    #toonName {
+      color: #3742fa;
+      margin: 10px 0 5px 0;
+    }
+
+    #storyText {
+      color: #2f3542;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Bubbles Background -->
+  <div class="bubble b1"></div>
+  <div class="bubble b2"></div>
+  <div class="bubble b3"></div>
+  <div class="bubble b4"></div>
+  <div class="bubble b5"></div>
+
+  <!-- Main Card -->
+  <div class="container">
+    <h1>ToonTeach World</h1>
+    <p class="subtitle">Tell Shin-chan, Doraemon, Mickey, Barbie & Friends your troubles!</p>
+
+    <div class="input-box">
+      <h3>What is bothering you today?</h3>
+      <textarea id="userInput" placeholder="E.g., I feel stressed about exams / I feel lonely..."></textarea>
+    </div>
+
+    <button onclick="generateStory()">Console Me With A Story!</button>
+
+    <!-- Output Box -->
+    <div id="result" class="result-section">
+      <img id="toonImage" class="character-img" src="" alt="Cartoon Character">
+      <h2 id="toonName"></h2>
+      <p id="storyText"></p>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    const cartoons = [
+      {
+        name: "Shin-chan",
+        image: "https://img.icons8.com/color/96/shin-chan.png",
+        pitch: 1.4,
+        rate: 1.0,
+        stories: [
+          "Hey! Don't stress out about anything! Let's eat some tasty Chocobi biscuits and do the Action Kamen dance together!",
+          "Worrying is so boring! Even when Mitzi scolds me, I just laugh and dance! Cheer up and enjoy your day!"
+        ]
+      },
+      {
+        name: "Doraemon",
+        image: "https://img.icons8.com/color/96/doraemon.png",
+        pitch: 0.9,
+        rate: 1.0,
+        stories: [
+          "Don't worry my friend! I'll pull out a special Happiness Gadget from my 4D pocket just for you! Be brave and stay smiling!",
+          "Every problem has a solution! Take a deep breath, grab a delicious Dorayaki pancake, and relax!"
+        ]
+      },
+      {
+        name: "Mickey Mouse",
+        image: "https://img.icons8.com/color/96/mickey-mouse.png",
+        pitch: 1.5,
+        rate: 1.0,
+        stories: [
+          "Hot dog! Always keep smiling! Life is a magical adventure just like Disneyland. Minnie and I are cheering for you!",
+          "Laughter is timeless and dreams are forever! Don't let small troubles steal your happiness!"
+        ]
+      },
+      {
+        name: "Barbie",
+        image: "https://img.icons8.com/color/96/barbie.png",
+        pitch: 1.2,
+        rate: 1.0,
+        stories: [
+          "You can be anything you want to be! Believe in yourself and shine bright like a star. Nothing can stop you!",
+          "Your smile is your greatest power! Leave your worries behind and face the world with confidence!"
+        ]
+      },
+      {
+        name: "Tom and Jerry",
+        image: "https://img.icons8.com/color/96/tom-and-jerry.png",
+        pitch: 1.0,
+        rate: 1.0,
+        stories: [
+          "Even though we chase each other all day, we always remain best friends! Life has ups and downs, so just enjoy the fun!",
+          "Be clever like Jerry and never give up like Tom! Your bad days will pass away very soon!"
+        ]
+      }
+    ];
+
+    // Voice Function
+    function speakText(text, pitch, rate) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const speech = new SpeechSynthesisUtterance();
+        speech.text = text;
+        speech.lang = 'en-US';
+        speech.pitch = pitch || 1.0;
+        speech.rate = rate || 1.0;
+        window.speechSynthesis.speak(speech);
+      }
+    }
+
+    function generateStory() {
+      const input = document.getElementById("userInput").value;
+      
+      if (input.trim() === "") {
+        alert("Please enter what is bothering you today!");
+        return;
+      }
+
+      const randomIndex = Math.floor(Math.random() * cartoons.length);
+      const selectedToon = cartoons[randomIndex];
+      
+      const randomStoryIndex = Math.floor(Math.random() * selectedToon.stories.length);
+      const story = selectedToon.stories[randomStoryIndex];
+
+      document.getElementById("toonImage").src = selectedToon.image;
+      document.getElementById("toonName").innerText = selectedToon.name + " says:";
+      document.getElementById("storyText").innerText = story;
+      
+      document.getElementById("result").style.display = "block";
+
+      // Speak Voice
+      speakText(`${selectedToon.name} says: ${story}`, selectedToon.pitch, selectedToon.rate);
+    }
+  </script>
+</body>
+</html>
